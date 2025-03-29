@@ -1,13 +1,85 @@
 [
   {
-    "id": 1,
-    "title": "Teclado mecánico",
-    "description": "Teclado RGB con switches rojos",
-    "code": "KB001",
-    "price": 50,
+    "id": 2,
+    "title": "Producto C",
+    "description": "Descripción básica",
+    "code": "C003",
+    "price": 150.99,
     "status": true,
-    "stock": 10,
-    "category": "Periféricos",
+    "stock": 15,
+    "category": "Electrónica",
     "thumbnails": []
+  },
+  {
+    "id": 3,
+    "title": "Producto D - Oferta",
+    "description": "Producto en liquidación",
+    "code": "D004",
+    "price": 89.99,
+    "status": false,
+    "stock": 5,
+    "category": "Outlet",
+    "thumbnails": [
+      "url-oferta.jpg"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Smartphone X",
+    "description": "Último modelo con 5 cámaras",
+    "code": "E005",
+    "price": 999.99,
+    "status": true,
+    "stock": 50,
+    "category": "Tecnología",
+    "thumbnails": [
+      "front.jpg",
+      "back.jpg",
+      "side.jpg",
+      "accessories.jpg"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Zapatos Deportivos",
+    "description": "Edición limitada",
+    "code": "F006",
+    "price": 120,
+    "status": true,
+    "stock": 0,
+    "category": "Calzado",
+    "thumbnails": [
+      "zapato-angular.jpg"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Cargador USB",
+    "code": "G007",
+    "price": 15.5,
+    "status": true,
+    "stock": 100,
+    "category": "Accesorios",
+    "thumbnails": []
+  },
+  {
+    "id": 7,
+    "status": true,
+    "thumbnails": []
+  },
+  {
+    "id": 8,
+    "title": "Cafetera Profesional X-2000",
+    "description": "Cafetera industrial con molino integrado y sistema de limpieza automática",
+    "code": "CAFE-X2000",
+    "price": 499.99,
+    "status": true,
+    "stock": 8,
+    "category": "Electrodomésticos Premium",
+    "thumbnails": [
+      "https://ejemplo.com/cafetera-frontal.jpg",
+      "https://ejemplo.com/cafetera-lateral.jpg",
+      "https://ejemplo.com/detalle-molino.jpg"
+    ]
   }
 ]
