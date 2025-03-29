@@ -6,50 +6,76 @@ class ProductManager {
         this.path = path.join(__dirname, '../data/products.json');
     }
 
-    // Método para obtener todos los productos
-    async getProducts() {
+    async #readFile() {
         try {
-            if (!fs.existsSync(this.path)) return [];  // Si no existe el archivo, devuelve un array vacío
+            if (!fs.existsSync(this.path)) return [];
             const data = await fs.promises.readFile(this.path, 'utf-8');
-            return JSON.parse(data);  // Retorna los productos desde el archivo
+            return JSON.parse(data);
         } catch (error) {
-            console.error('Error al obtener los productos:', error);
-            return [];  // Devuelve un array vacío si hay error
+            console.error('Error leyendo archivo:', error);
+            return [];
         }
     }
 
-    // Método para obtener un producto por su ID
-    async getProductsById(pid) {
-        const products = await this.getProducts();
-        return products.find(prod => prod.id === pid) || null;
-    }
-
-    // Método para agregar un nuevo producto
-    async addProduct({title, description, code, price, status = true, stock, category, thumbnails = []}) {
+    async #writeFile(data) {
         try {
-            const products = await this.getProducts(); // Carga los productos
-            const id = products.length ? products[products.length - 1].id + 1 : 1; // Calcula el ID basado en la longitud de los productos
-            const newProduct = {id, title, description, code, price, status, stock, category, thumbnails};
-
-            products.push(newProduct); // Agrega el nuevo producto al array de productos
-            await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2)); // Escribe la lista actualizada en el archivo
-            return newProduct; // Retorna el nuevo producto agregado
+            await fs.promises.writeFile(this.path, JSON.stringify(data, null, 2));
         } catch (error) {
-            console.error('Error al agregar el producto:', error);
+            console.error('Error escribiendo archivo:', error);
+            throw error;
         }
     }
-
-    // Método para eliminar un producto por su ID
-    async deleteProduct(pid) {
-        try {
-            let products = await this.getProducts();
-            const newProducts = products.filter(prod => prod.id !== pid);
-            if (products.length === newProducts.length) return null;
-            await fs.promises.writeFile(this.path, JSON.stringify(newProducts, null, 2));
-            return true;
-        } catch (error) {
-            console.error('Error al eliminar el producto:', error);
+    async getProducts() {
+        return await this.#readFile();
+    }
+    async getProductById(pid) {
+        const products = await this.#readFile();
+        const product = products.find(prod => prod.id === pid);
+        if (!product) throw new Error(`Producto con ID ${pid} no encontrado`);
+        return product;
+    }
+    async addProduct({ title, description, code, price, status = true, stock, category, thumbnails = [] }) {
+        if (!title || !description || !code || !price || !stock || !category) {
+            throw new Error('Faltan campos obligatorios');
         }
+
+        const products = await this.#readFile();
+        
+        if (products.some(prod => prod.code === code)) {
+            throw new Error(`El código ${code} ya está en uso`);
+        }
+
+        const id = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+        const newProduct = { id, title, description, code, price, status, stock, category, thumbnails };
+
+        products.push(newProduct);
+        await this.#writeFile(products);
+        return newProduct;
+    }
+    async updateProduct(id, updatedFields) {
+        const products = await this.#readFile();
+        const index = products.findIndex(p => p.id === id);
+        
+        if (index === -1) throw new Error(`Producto con ID ${id} no encontrado`);
+
+        if ('id' in updatedFields) delete updatedFields.id;
+
+        const updatedProduct = { ...products[index], ...updatedFields };
+        products[index] = updatedProduct;
+
+        await this.#writeFile(products);
+        return updatedProduct;
+    }
+    async deleteProduct(id) {
+        const products = await this.#readFile();
+        const newProducts = products.filter(prod => prod.id !== id);
+        
+        if (products.length === newProducts.length) {
+            throw new Error(`Producto con ID ${id} no encontrado`);
+        }
+
+        await this.#writeFile(newProducts);
+        return true;
     }
 }
 
