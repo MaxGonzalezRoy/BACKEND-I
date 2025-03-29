@@ -17,6 +17,7 @@ Instalación y configuración
 1. Clonar el repositorio
 
  git clone [https://github.com/MaxGonzalezRoy/BACKEND-I.git]
+ 
  cd BACKEND-1
 
 2. Instalar dependencias
