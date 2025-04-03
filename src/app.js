@@ -6,8 +6,8 @@ const productsRouter = require('./routes/products');
 const app = express();
 const PORT = 8080;
 
-app.use('/api/products', productsRouter);
-
+app.use('/api/products', require('./routes/products'));
+app.use('/api/carts', require('./routes/carts'));
 app.use(express.json());
 
 const productManager = new ProductManager();
@@ -56,6 +56,4 @@ app.post('/api/carts/:cid/product/:pid', async (req, res) => {
     res.json(updatedCart);
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor escuchando en el puerto ${PORT}`);
-});
+app.listen(8080, () => console.log(`Servidor escuchando en el puerto ${PORT}`));

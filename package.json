@@ -1,14 +1,16 @@
 {
   "name": "backend-i",
   "version": "1.0.0",
-  "main": "primerPractica.js",
+  "description": "API REST para gestión de productos y carritos de compras",
+  "main": "src/app.js",
   "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Max",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "express": "^4.21.2"
   },
