@@ -3,12 +3,12 @@ const path = require('path');
 
 class ProductManager {
     constructor() {
-        this.path = path.join(__dirname, '../data/products.json');
+        this.path = path.join(__dirname, '../src/data/products.json');
     }
 
     async #readFile() {
         try {
-            if (!fs.existsSync(this.path)) return [];
+            if (!fs.existsSync(this.path)) await this.#writeFile([]);
             const data = await fs.promises.readFile(this.path, 'utf-8');
             return JSON.parse(data);
         } catch (error) {
@@ -19,7 +19,7 @@ class ProductManager {
 
     async #writeFile(data) {
         try {
-            await fs.promises.writeFile(this.path, JSON.stringify(data, null, 2));
+            await fs.promises.writeFile(this.path, JSON.stringify(data, null, 2), 'utf-8');
         } catch (error) {
             console.error('Error escribiendo archivo:', error);
             throw error;
