@@ -2,6 +2,16 @@ const express = require('express');
 const router = express.Router();
 const ProductManager = require('../src/Managers/ProductManager');
 const productManager = new ProductManager();
+const app = express();
+const producsRouter = require('./routes/products');
+
+app.use('express.json());');
+app.use('/api/products', producsRouter);
+
+const PORT = 8080;
+app.listen(PORT, () => {
+    console.log(`Servidor escuchando en el puerto ${PORT}`);
+});
 
 router.get('/', async (req, res) => {
     const products = await productManager.getProducts();
