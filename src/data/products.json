@@ -1,13 +1,13 @@
 [
-  {
-    "title": "Laptop",
-    "description": "High-performance laptop",
-    "code": "LP001",
-    "price": 999.99,
-    "stock": 10,
-    "category": "Electronics",
+    {
     "id": 1,
+    "title": "Producto demo",
+    "description": "Esto es un producto de ejemplo",
+    "code": "PRD001",
+    "price": 150,
+    "stock": 20,
+    "category": "general",
     "status": true,
     "thumbnails": []
-  }
+    }
 ]
