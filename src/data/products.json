@@ -1,13 +1,13 @@
 [
-    {
-    "id": 1,
-    "title": "Producto demo",
-    "description": "Esto es un producto de ejemplo",
-    "code": "PRD001",
-    "price": 150,
-    "stock": 20,
-    "category": "general",
-    "status": true,
-    "thumbnails": []
-    }
+  {
+    "title": "VASO",
+    "description": "UTENSILLO",
+    "code": "ASFAF",
+    "price": 1500,
+    "stock": 3,
+    "category": "BAZAR",
+    "thumbnails": [],
+    "id": 2,
+    "status": true
+  }
 ]
