@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Productos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Lista de Productos</h1>
+
+        {{#if products.length}}
+            <ul>
+                {{#each products}}
+                    <li>
+                        <strong>{{this.title}}</strong> - ${{this.price}} <br>
+                        <em>{{this.description}}</em> <br>
+                        <small>Código: {{this.code}} | Stock: {{this.stock}} | Categoría: {{this.category}}</small>
+                    </li>
+                {{/each}}
+            </ul>
+        {{else}}
+            <p>No hay productos cargados.</p>
+        {{/if}}
+
+        <a href="/realtimeproducts">Ir a vista en tiempo real</a>
+    </main>
+</body>
+</html>

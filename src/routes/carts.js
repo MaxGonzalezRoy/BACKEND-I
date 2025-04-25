@@ -29,12 +29,11 @@ router.post('/:cid/product/:pid', async (req, res) => {
     try {
         const cid = parseInt(req.params.cid);
         const pid = parseInt(req.params.pid);
-        const quantity = req.body.quantity || 1;
-
-        if (isNaN(cid) || isNaN(pid)) {
-            return res.status(400).json({ error: "IDs must be numbers" });
+        const quantity = parseInt(req.body.quantity) || 1;
+        if (isNaN(quantity) || quantity <= 0) {
+            return res.status(400).json({ error: "Quantity must be a positive number" });
         }
-
+        
         const updatedCart = await cartManager.addProductToCart(cid, pid, quantity);
         res.json(updatedCart);
     } catch (error) {

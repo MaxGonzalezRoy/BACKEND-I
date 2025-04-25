@@ -1,10 +1,8 @@
-import { Router } from 'express';
-import ProductManager from '../managers/ProductManager.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
+const express = require('express');
+const ProductManager = require('../managers/ProductManager');
+const path = require('path');
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const router = Router();
+const router = express.Router();
 const productManager = new ProductManager(path.join(__dirname, '../data/products.json'));
 
 router.get('/', async (req, res) => {
@@ -38,4 +36,4 @@ router.get('/realtimeproducts', async (req, res) => {
     }
 });
 
-export default router;
+module.exports = router;

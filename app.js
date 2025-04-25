@@ -24,9 +24,15 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
+
 // Rutas API
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
+
+// Ruta principal (Redirección a /home)
+app.get('/', (req, res) => {
+    res.redirect('/home');
+});
 
 // Vista estática con productos
 app.get('/home', async (req, res) => {
@@ -84,9 +90,10 @@ io.on('connection', async (socket) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error details:', err);  // Muestra el error completo
+    res.status(500).json({ error: 'Internal Server Error', message: err.message, stack: err.stack });
 });
+
 
 // Start server
 const PORT = 8080;
