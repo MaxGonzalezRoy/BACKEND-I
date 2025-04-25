@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Productos en Tiempo Real</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Lista de Productos en Tiempo Real</h1>
+
+    <ul id="product-list"></ul>
+
+    <h2>Agregar producto</h2>
+    <form id="product-form">
+        <input type="text" name="title" placeholder="Título" required />
+        <input type="text" name="description" placeholder="Descripción" required />
+        <input type="number" name="price" placeholder="Precio" required />
+        <button type="submit">Agregar</button>
+    </form>
+
+    <script>
+        const socket = io();
+        const productList = document.getElementById('product-list');
+        const form = document.getElementById('product-form');
+
+        // Escuchar los productos del servidor
+        socket.on('products', (products) => {
+            productList.innerHTML = ''; // Limpiar la lista antes de agregar nuevos productos
+            products.forEach(p => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <strong>${p.title}</strong> - $${p.price}
+                    <button onclick="deleteProduct(${p.id})">Eliminar</button>
+                `;
+                productList.appendChild(li);
+            });
+        });
+
+        // Manejar el envío del formulario para agregar un nuevo producto
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(form));
+            socket.emit('new-product', {
+                title: data.title,
+                description: data.description,
+                price: parseFloat(data.price),
+            });
+            form.reset(); // Resetear el formulario después de enviarlo
+        });
+
+        // Función para eliminar un producto
+        function deleteProduct(id) {
+            socket.emit('delete-product', id);
+        }
+    </script>
+</body>
+</html>

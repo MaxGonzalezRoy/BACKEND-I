@@ -84,7 +84,7 @@ class ProductManager {
     async deleteProduct(id) {
         try {
             const products = await this.getProducts();
-            const newProducts = products.filter(p => p.id !== id);
+            const newProducts = products.filter(p => p.id !== Number(id));
             if (products.length === newProducts.length) {
                 throw new Error(`Product with ID ${id} not found`);
             }
