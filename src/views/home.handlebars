@@ -2,49 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Productos</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 {
-            color: #007bff;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            background: white;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .price {
-            color: green;
-            font-weight: bold;
-        }
-    </style>
+    <title>Lista de Productos</title>
 </head>
 <body>
     <h1>Lista de Productos</h1>
+
     {{#if products.length}}
         <ul>
             {{#each products}}
                 <li>
-                    <h3>{{this.title}}</h3>
-                    <p>{{this.description}}</p>
-                    <p class="price">$ {{this.price}}</p>
-                    <p>Categoría: {{this.category}}</p>
-                    <p>Stock: {{this.stock}}</p>
+                    <strong>{{this.title}}</strong> - ${{this.price}} <br>
+                    <em>{{this.description}}</em> <br>
+                    <small>Código: {{this.code}} | Stock: {{this.stock}} | Categoría: {{this.category}}</small>
                 </li>
             {{/each}}
         </ul>
     {{else}}
-        <p>No hay productos disponibles.</p>
+        <p>No hay productos cargados.</p>
     {{/if}}
+
+    <a href="/realtimeproducts">Ir a vista en tiempo real</a>
 </body>
 </html>
