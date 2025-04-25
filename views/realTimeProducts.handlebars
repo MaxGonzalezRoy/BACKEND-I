@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Productos en Tiempo Real</title>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/socket.io/socket.io.js"></script>
     <style>
         body {
@@ -15,7 +17,7 @@
             color: #333;
         }
 
-        form {
+        form, #edit-form {
             margin-bottom: 20px;
             background-color: #fff;
             padding: 15px;
@@ -30,7 +32,7 @@
             border-radius: 4px;
         }
 
-        button {
+        .btn-save {
             padding: 8px 12px;
             background-color: #28a745;
             color: white;
@@ -39,8 +41,36 @@
             cursor: pointer;
         }
 
-        button:hover {
+        .btn-save:hover {
             background-color: #218838;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .btn-edit {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .btn-edit:hover {
+            background-color: #0056b3;
         }
 
         #product-list {
@@ -55,38 +85,30 @@
             margin-bottom: 10px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-
-        li button {
-            background-color: #dc3545;
-            margin-left: 10px;
-        }
-
-        li button:hover {
-            background-color: #c82333;
-        }
     </style>
 </head>
 <body>
     <h1>🟢 Productos en Tiempo Real</h1>
 
-    <form id="product-form">
-        <input type="text" name="title" placeholder="Título" required />
-        <input type="text" name="description" placeholder="Descripción" required />
-        <input type="text" name="code" placeholder="Código" required />
-        <input type="number" name="price" placeholder="Precio" required />
-        <input type="number" name="stock" placeholder="Stock" required />
-        <input type="text" name="category" placeholder="Categoría" required />
-        <input type="text" name="thumbnails" placeholder="URL de imagen (opcional)" />
-        <button type="submit">Agregar Producto</button>
-    </form>
+    <div id="edit-form" style="display: none;">
+        <h3>Editar Producto</h3>
+        <input type="text" id="edit-title" placeholder="Título" required />
+        <input type="text" id="edit-description" placeholder="Descripción" required />
+        <input type="number" id="edit-price" placeholder="Precio" required />
+        <input type="number" id="edit-stock" placeholder="Stock" required />
+        <input type="text" id="edit-category" placeholder="Categoría" required />
+        <input type="text" id="edit-thumbnails" placeholder="URL de imagen (opcional)" />
+        <button class="btn-save" id="save-edit">Guardar Cambios</button>
+    </div>
 
     <ul id="product-list"></ul>
 
     <script>
         const socket = io();
-
-        const form = document.getElementById('product-form');
         const productList = document.getElementById('product-list');
+
+        const editForm = document.getElementById('edit-form');
+        const saveEditButton = document.getElementById('save-edit');
 
         socket.on('products', (products) => {
             productList.innerHTML = '';
@@ -94,27 +116,68 @@
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <strong>${product.title}</strong> - $${product.price}
-                    <button onclick="deleteProduct(${product.id})">Eliminar</button>
+                    <button class="btn-delete" onclick="deleteProduct(${product.id})">Eliminar</button>
+                    <button class="btn-edit" onclick='loadEditForm(${JSON.stringify(product)})'>Editar</button>
                 `;
                 productList.appendChild(li);
             });
         });
 
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-            const formData = new FormData(form);
-            const product = {};
-            formData.forEach((value, key) => {
-                product[key] = key === 'price' || key === 'stock' ? Number(value) : value;
-            });
-            product.thumbnails = product.thumbnails ? [product.thumbnails] : [];
-            socket.emit('new-product', product);
-            form.reset();
-        });
-
         function deleteProduct(id) {
             socket.emit('delete-product', id);
         }
+
+        function loadEditForm(product) {
+            document.getElementById('edit-title').value = product.title;
+            document.getElementById('edit-description').value = product.description;
+            document.getElementById('edit-price').value = product.price;
+            document.getElementById('edit-stock').value = product.stock;
+            document.getElementById('edit-category').value = product.category;
+            document.getElementById('edit-thumbnails').value = product.thumbnails?.[0] || '';
+            editForm.dataset.id = product.id;
+            editForm.style.display = 'block';
+        }
+
+        saveEditButton.addEventListener('click', () => {
+            const id = Number(editForm.dataset.id);
+            const updatedProduct = {
+                title: document.getElementById('edit-title').value,
+                description: document.getElementById('edit-description').value,
+                price: Number(document.getElementById('edit-price').value),
+                stock: Number(document.getElementById('edit-stock').value),
+                category: document.getElementById('edit-category').value,
+                thumbnails: [document.getElementById('edit-thumbnails').value]
+            };
+
+            socket.emit('edit-product', id, updatedProduct);
+            editForm.style.display = 'none';
+        });
+
+        socket.on('toast', (msg) => {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: msg,
+                showConfirmButton: false,
+                timer: 2000
+            });
+        });
+
+        socket.on('error', (msg) => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: msg,
+            });
+        });
+
+        Swal.fire({
+            title: '¡Productos Actualizados!',
+            text: 'La lista de productos se ha actualizado correctamente.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
     </script>
 </body>
 </html>

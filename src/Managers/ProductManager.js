@@ -49,11 +49,14 @@ class ProductManager {
     async getProducts() {
         try {
             const data = await fs.readFile(this.path, 'utf-8');
-            return JSON.parse(data);
+            const parsed = JSON.parse(data);
+            console.log("📦 Total de productos cargados:", parsed.length);
+            return parsed;
         } catch (error) {
             throw new Error('Error reading products: ' + error.message);
         }
     }
+    
 
     async getProductById(id) {
         try {

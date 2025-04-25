@@ -1,13 +1,26 @@
 [
   {
-    "title": "VASO",
-    "description": "UTENSILLO",
-    "code": "ASFAF",
-    "price": 1500,
-    "stock": 3,
-    "category": "BAZAR",
+    "title": "ddddddddddd",
+    "description": "dddddddddd",
+    "code": "fafaf",
+    "price": 12,
+    "stock": 1212,
+    "category": "faffa",
+    "thumbnails": [
+      "affa"
+    ],
+    "id": 6,
+    "status": true
+  },
+  {
+    "title": "aaaa",
+    "description": "aaaaaaaa",
+    "code": "aaaaaaaa",
+    "price": 111,
+    "stock": 111,
+    "category": "aaaaaaaa",
     "thumbnails": [],
-    "id": 2,
+    "id": 7,
     "status": true
   }
 ]
