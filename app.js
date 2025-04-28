@@ -3,6 +3,7 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const { engine } = require('express-handlebars');
 const path = require('path');
+const cors = require('cors');
 
 const productsRouter = require('./src/routes/products');
 const cartsRouter = require('./src/routes/carts');
@@ -24,6 +25,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
+app.use(cors({
+    origin: ['http://localhost:8080'],
+}));
 
 app.get('/', (req, res) => {
     res.redirect('/home');
@@ -36,6 +40,23 @@ app.get('/home', async (req, res) => {
     } catch (error) {
         res.status(500).send('Error al obtener productos');
     }
+});
+
+app.get('/productos', async (req, res) => {
+    try {
+        const products = await productManager.getProducts();
+        res.render('productos', { products });
+    } catch (error) {
+        res.status(500).send('Error al obtener productos');
+    }
+});
+
+app.get('/contacto', (req, res) => {
+    res.render('contacto');
+});
+
+app.get('/cart', (req, res) => {
+    res.render('cart');
 });
 
 app.get('/realtimeproducts', async (req, res) => {
@@ -89,7 +110,7 @@ io.on('connection', async (socket) => {
             socket.emit('error', error.message);
         }
     });
-    
+
     socket.on('update-product', async (updatedProduct) => {
         try {
             await productManager.updateProduct(updatedProduct.id, updatedProduct);
@@ -103,12 +124,10 @@ io.on('connection', async (socket) => {
 
 });
 
-
 app.use((err, req, res, next) => {
     console.error('Error details:', err);
     res.status(500).json({ error: 'Internal Server Error', message: err.message, stack: err.stack });
 });
-
 
 const PORT = 8080;
 httpServer.listen(PORT, () => {

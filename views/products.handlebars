@@ -1,0 +1,21 @@
+{{> main}}
+
+<h1>📦 Lista de Productos</h1>
+
+<div class="product-list">
+    {{#if products.length}}
+        {{#each products}}
+            <div class="product-card">
+                <h2>{{this.title}}</h2>
+                <p><strong>Precio:</strong> ${{this.price}}</p>
+                <p><strong>Descripción:</strong> {{this.description}}</p>
+                <p><strong>Categoría:</strong> {{this.category}}</p>
+                <button>Agregar al carrito</button>
+            </div>
+        {{/each}}
+    {{else}}
+        <p>No hay productos disponibles.</p>
+    {{/if}}
+</div>
+
+{{> footer}}
