@@ -8,31 +8,36 @@ const productManager = new ProductManager(path.join(__dirname, '../data/products
 router.get('/', async (req, res) => {
     try {
         const products = await productManager.getProducts();
-        res.render('home', {
-            title: 'Todos los Productos',
-            products
-        });
+        res.json(products);
     } catch (error) {
-        res.status(500).render('error', {
-            title: 'Error',
-            message: 'No se pudieron cargar los productos'
-        });
+        res.status(500).json({ error: 'No se pudieron cargar los productos' });
     }
 });
 
-router.get('/realtimeproducts', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
-        const products = await productManager.getProducts();
-        res.render('realTimeProducts', {
-            title: 'Productos en Tiempo Real',
-            products,
-            script: 'realtime'
-        });
+        const newProduct = await productManager.addProduct(req.body);
+        res.status(201).json(newProduct);
     } catch (error) {
-        res.status(500).render('error', {
-            title: 'Error',
-            message: 'No se pudo cargar la vista en tiempo real'
-        });
+        res.status(500).json({ error: 'No se pudo agregar el producto', details: error.message });
+    }
+});
+
+router.put('/:id', async (req, res) => {
+    try {
+        const updatedProduct = await productManager.updateProduct(req.params.id, req.body);
+        res.json(updatedProduct);
+    } catch (error) {
+        res.status(500).json({ error: 'No se pudo actualizar el producto', details: error.message });
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    try {
+        await productManager.deleteProduct(req.params.id);
+        res.json({ message: 'Producto eliminado exitosamente' });
+    } catch (error) {
+        res.status(500).json({ error: 'No se pudo eliminar el producto', details: error.message });
     }
 });
 

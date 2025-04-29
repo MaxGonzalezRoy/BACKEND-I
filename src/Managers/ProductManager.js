@@ -2,8 +2,8 @@ const fs = require('fs').promises;
 const path = require('path');
 
 class ProductManager {
-    constructor() {
-        this.path = path.join(__dirname, '../data/products.json');
+    constructor(filePath) {
+        this.path = filePath || path.join(__dirname, '../data/products.json');
         this.initializeFile();
     }
 
@@ -20,83 +20,68 @@ class ProductManager {
     }
 
     async addProduct(product) {
-        try {
-            const requiredFields = ['title', 'description', 'code', 'price', 'stock', 'category'];
-            for (const field of requiredFields) {
-                if (!product[field]) throw new Error(`Missing required field: ${field}`);
-            }
+        const requiredFields = ['title', 'description', 'code', 'price', 'stock', 'category'];
+        requiredFields.forEach(field => {
+            if (!product[field]) throw new Error(`Missing required field: ${field}`);
+        });
 
-            const products = await this.getProducts();
-            if (products.some(p => p.code === product.code)) {
-                throw new Error(`Product with code ${product.code} already exists`);
-            }
-
-            const newProduct = {
-                ...product,
-                id: products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1,
-                status: product.status !== undefined ? product.status : true,
-                thumbnails: product.thumbnails || []
-            };
-
-            products.push(newProduct);
-            await fs.writeFile(this.path, JSON.stringify(products, null, 2));
-            return newProduct;
-        } catch (error) {
-            throw new Error('Error adding product: ' + error.message);
+        const products = await this.getProducts();
+        if (products.some(p => p.code === product.code)) {
+            throw new Error(`Product with code "${product.code}" already exists`);
         }
+
+        const newProduct = {
+            ...product,
+            id: products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1,
+            status: product.status !== undefined ? product.status : true,
+            thumbnails: product.thumbnails || []
+        };
+
+        products.push(newProduct);
+        await fs.writeFile(this.path, JSON.stringify(products, null, 2));
+        return newProduct;
     }
 
     async getProducts() {
-        try {
-            const data = await fs.readFile(this.path, 'utf-8');
-            const parsed = JSON.parse(data);
-            console.log("📦 Total de productos cargados:", parsed.length);
-            return parsed;
-        } catch (error) {
-            throw new Error('Error reading products: ' + error.message);
-        }
+        const data = await fs.readFile(this.path, 'utf-8');
+        const parsed = JSON.parse(data);
+        console.log("📦 Total de productos cargados:", parsed.length);
+        return parsed;
     }
-    
 
     async getProductById(id) {
-        try {
-            const products = await this.getProducts();
-            const product = products.find(p => p.id === id);
-            if (!product) throw new Error(`Product with ID ${id} not found`);
-            return product;
-        } catch (error) {
-            throw new Error('Error getting product: ' + error.message);
-        }
+        if (isNaN(id)) throw new Error('Product ID must be a number');
+        
+        const products = await this.getProducts();
+        const product = products.find(p => p.id === id);
+        if (!product) throw new Error(`Product with ID ${id} not found`);
+        return product;
     }
 
     async updateProduct(id, updatedFields) {
-        try {
-            if (updatedFields.id) throw new Error("Cannot update product ID");
-            const products = await this.getProducts();
-            const index = products.findIndex(p => p.id === id);
-            if (index === -1) throw new Error(`Product with ID ${id} not found`);
+        if (isNaN(id)) throw new Error('Product ID must be a number');
+        if (updatedFields.id) throw new Error("Cannot update product ID");
 
-            products[index] = { ...products[index], ...updatedFields };
-            await fs.writeFile(this.path, JSON.stringify(products, null, 2));
-            return products[index];
-        } catch (error) {
-            throw new Error('Error updating product: ' + error.message);
-        }
+        const products = await this.getProducts();
+        const index = products.findIndex(p => p.id === id);
+        if (index === -1) throw new Error(`Product with ID ${id} not found`);
+
+        products[index] = { ...products[index], ...updatedFields };
+        await fs.writeFile(this.path, JSON.stringify(products, null, 2));
+        return products[index];
     }
 
     async deleteProduct(id) {
-        try {
-            const products = await this.getProducts();
-            const newProducts = products.filter(p => p.id !== Number(id));
-            if (products.length === newProducts.length) {
-                throw new Error(`Product with ID ${id} not found`);
-            }
+        if (isNaN(id)) throw new Error('Product ID must be a number');
 
-            await fs.writeFile(this.path, JSON.stringify(newProducts, null, 2));
-            return true;
-        } catch (error) {
-            throw new Error('Error deleting product: ' + error.message);
+        const products = await this.getProducts();
+        const newProducts = products.filter(p => p.id !== id);
+        if (products.length === newProducts.length) {
+            throw new Error(`Product with ID ${id} not found`);
         }
+
+        await fs.writeFile(this.path, JSON.stringify(newProducts, null, 2));
+        return true;
     }
 }
 

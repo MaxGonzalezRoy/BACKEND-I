@@ -19,21 +19,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.engine('handlebars', engine());
+app.engine('handlebars', engine({
+    layoutsDir: path.join(__dirname, 'views', 'layouts'),
+    defaultLayout: 'main',
+}));
+
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use('/api/products', productsRouter);
-app.use('/api/carts', cartsRouter);
 app.use(cors({
     origin: ['http://localhost:8080'],
 }));
 
-app.get('/', (req, res) => {
-    res.redirect('/home');
-});
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter);
 
-app.get('/home', async (req, res) => {
+app.get('/', async (req, res) => {
     try {
         const products = await productManager.getProducts();
         res.render('home', { products });
@@ -45,14 +46,14 @@ app.get('/home', async (req, res) => {
 app.get('/productos', async (req, res) => {
     try {
         const products = await productManager.getProducts();
-        res.render('productos', { products });
+        res.render('products', { products });
     } catch (error) {
         res.status(500).send('Error al obtener productos');
     }
 });
 
 app.get('/contacto', (req, res) => {
-    res.render('contacto');
+    res.render('contact');
 });
 
 app.get('/cart', (req, res) => {
@@ -71,6 +72,16 @@ app.get('/realtimeproducts', async (req, res) => {
 io.on('connection', async (socket) => {
     console.log('🟢 Nuevo cliente conectado');
 
+    const sendUpdatedProducts = async (toastMessage = null) => {
+        try {
+            const products = await productManager.getProducts();
+            io.emit('products', products);
+            if (toastMessage) socket.emit('toast', toastMessage);
+        } catch (error) {
+            socket.emit('error', error.message);
+        }
+    };
+
     try {
         const products = await productManager.getProducts();
         socket.emit('products', products);
@@ -81,9 +92,7 @@ io.on('connection', async (socket) => {
     socket.on('new-product', async (data) => {
         try {
             await productManager.addProduct(data);
-            const updatedProducts = await productManager.getProducts();
-            io.emit('products', updatedProducts);
-            socket.emit('toast', '✅ Producto agregado con éxito');
+            await sendUpdatedProducts('✅ Producto agregado con éxito');
         } catch (error) {
             socket.emit('error', error.message);
         }
@@ -92,20 +101,7 @@ io.on('connection', async (socket) => {
     socket.on('delete-product', async (id) => {
         try {
             await productManager.deleteProduct(id);
-            const updated = await productManager.getProducts();
-            io.emit('products', updated);
-            socket.emit('toast', '🗑️ Producto eliminado correctamente');
-        } catch (error) {
-            socket.emit('error', error.message);
-        }
-    });
-
-    socket.on('edit-product', async (id, updatedData) => {
-        try {
-            await productManager.updateProduct(id, updatedData);
-            const updatedProducts = await productManager.getProducts();
-            io.emit('products', updatedProducts);
-            socket.emit('toast', 'Producto actualizado con éxito');
+            await sendUpdatedProducts('🗑️ Producto eliminado correctamente');
         } catch (error) {
             socket.emit('error', error.message);
         }
@@ -114,9 +110,7 @@ io.on('connection', async (socket) => {
     socket.on('update-product', async (updatedProduct) => {
         try {
             await productManager.updateProduct(updatedProduct.id, updatedProduct);
-            const updatedProducts = await productManager.getProducts();
-            io.emit('products', updatedProducts);
-            socket.emit('toast', '✅ Producto actualizado con éxito');
+            await sendUpdatedProducts('✅ Producto actualizado con éxito');
         } catch (error) {
             socket.emit('error', error.message);
         }
