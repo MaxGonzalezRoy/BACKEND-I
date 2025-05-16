@@ -1,13 +1,20 @@
 [
-  {
-    "title": "aaaa",
-    "description": "aaaaaaaa",
-    "code": "aaaaaaaa",
-    "price": 111,
-    "stock": 111,
-    "category": "aaaaaaaa",
-    "thumbnails": [],
-    "id": 7,
-    "status": true
-  }
+{
+    "id": 1,
+    "title": "Teclado Mecánico",
+    "description": "Teclado Mecánico RGB",
+    "price": 5000,
+    "code": "TK-001",
+    "stock": 10,
+    "category": "perifericos"
+},
+{
+    "id": 2,
+    "title": "Mouse gamer",
+    "description": "RGB con 7 botones",
+    "price": 3500,
+    "code": "MS-007",
+    "stock": 15,
+    "category": "perifericos"
+}
 ]

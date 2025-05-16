@@ -1,0 +1,10 @@
+{{#each products}}
+    <div class="bg-white shadow-md rounded-lg p-4">
+        <h2 class="text-xl font-semibold">{{this.title}}</h2>
+        <p>Precio: ${{this.price}}</p>
+        <button 
+            data-id="{{this.id}}" 
+            class="delete-btn bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded mt-2"
+        >Eliminar</button>
+    </div>
+{{/each}}
