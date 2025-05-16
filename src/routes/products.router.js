@@ -5,13 +5,32 @@ const router = Router();
 
 router.get('/', async (req, res) => {
   try {
-    console.log("📥 GET /api/products llamado");
-    const products = await productDao.getProducts();
-    console.log("📤 Enviando productos al cliente:", products);
-    res.json(products);
+    console.log("📥 GET /api/products llamado con query:", req.query);
+    
+    const { limit = 10, page = 1, category, sort } = req.query;
+    
+    // Armar filtro
+    const filter = {};
+    if (category) filter.category = category;
+
+    // Armar orden
+    const sortOption = {};
+    if (sort === 'asc') sortOption.price = 1;
+    else if (sort === 'desc') sortOption.price = -1;
+
+    const options = {
+      limit: parseInt(limit),
+      page: parseInt(page),
+      sort: sortOption,
+    };
+
+    const result = await productDao.getPaginatedProducts(filter, options);
+
+    console.log("📤 Productos paginados:", result);
+    res.json(result);
   } catch (error) {
-    console.error("❌ Error en GET /api/products:", error.message);
-    res.status(500).json({ error: 'Error al obtener productos' });
+    console.error("❌ Error en GET /api/products con paginación:", error.message);
+    res.status(500).json({ error: 'Error al obtener productos con paginación' });
   }
 });
 

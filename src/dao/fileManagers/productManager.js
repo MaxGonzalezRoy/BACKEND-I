@@ -22,10 +22,7 @@ export default class ProductManager {
   async #readFile() {
     try {
       const data = await fs.readFile(this.path, 'utf-8');
-      const parsed = JSON.parse(data);
-      console.log("📂 Archivo leído correctamente:", this.path);
-      console.log("🧾 Contenido del archivo:", parsed);
-      return parsed;
+      return JSON.parse(data);
     } catch (err) {
       console.error("❌ Error leyendo archivo de productos:", err.message);
       return [];
@@ -38,7 +35,6 @@ export default class ProductManager {
 
   async getProducts() {
     const products = await this.#readFile();
-    console.log("📦 Productos retornados por getProducts():", products);
     return products.map(p => ({ ...p, _id: p.id }));
   }
 
@@ -47,7 +43,7 @@ export default class ProductManager {
 
     let filtered = category
       ? products.filter(p => p.category.toLowerCase() === category.toLowerCase())
-      : products;
+      : [...products];
 
     if (sort === 'asc') {
       filtered.sort((a, b) => a.price - b.price);
@@ -55,9 +51,9 @@ export default class ProductManager {
       filtered.sort((a, b) => b.price - a.price);
     }
 
-    const totalProducts = filtered.length;
-    const totalPages = Math.ceil(totalProducts / limit);
-    page = Math.max(1, Math.min(page, totalPages));
+    const totalDocs = filtered.length;
+    const totalPages = Math.ceil(totalDocs / limit);
+    page = Math.max(1, Math.min(page, totalPages || 1));
 
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
@@ -65,8 +61,9 @@ export default class ProductManager {
     const docs = filtered.slice(startIndex, endIndex).map(p => ({ ...p, _id: p.id }));
 
     return {
+      status: 'success',
       docs,
-      totalDocs: totalProducts,
+      totalDocs,
       limit,
       totalPages,
       page,
