@@ -3,18 +3,15 @@ import { productDao, cartDao } from '../dao/index.js';
 
 const viewsRouter = Router();
 
-// INICIO
 viewsRouter.get('/', (req, res) => {
     res.render('home');
 });
 
-// HOME
 viewsRouter.get('/home', async (req, res) => {
-    const products = await productDao.getProducts(); // CORRECTO: productDao (sin s)
+    const products = await productDao.getProducts();
     res.render('home', { products });
 });
 
-// PRODUCTOS CON PAGINACIÓN Y FILTROS
 viewsRouter.get('/products', async (req, res) => {
     try {
         const query = req.query;
@@ -25,7 +22,6 @@ viewsRouter.get('/products', async (req, res) => {
 
         const sortOptions = (sort === 'asc' || sort === 'desc') ? { price: sort } : {};
 
-        // CORREGIDO: productDao en lugar de productsDao
         const products = await productDao.getProductsPaginated(filters, {
             page,
             limit,
@@ -49,22 +45,18 @@ viewsRouter.get('/products', async (req, res) => {
     }
 });
 
-// Vista que renderiza el HTML vacío (JS lo llena todo)
 viewsRouter.get('/products-dynamic', (req, res) => {
     res.render('products-dynamic');
 });
 
-// VISTA DINÁMICA DE CARRITO USANDO localStorage
 viewsRouter.get('/cart', (req, res) => {
     res.render('carts');
 });
 
-// VISTA CARRITO ESTÁTICA POR ID
 viewsRouter.get('/carts/:cid', async (req, res) => {
     try {
         const cid = req.params.cid;
 
-        // CORREGIDO: cartDao en lugar de cartsDao
         const cart = await cartDao.getCartById(cid);
 
         if (!cart) {

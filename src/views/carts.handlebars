@@ -1,7 +1,6 @@
 <h1 class="text-3xl font-bold text-center my-6">🛒 Tu Carrito</h1>
 
 <div id="cart-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-  <!-- Productos se insertan aquí dinámicamente -->
 </div>
 
 <div class="text-center mt-6">
@@ -34,7 +33,7 @@
         return;
       }
 
-      emptyBtn.classList.remove('hidden'); // Mostrar botón de vaciar
+      emptyBtn.classList.remove('hidden');
 
       data.cart.products.forEach(item => {
         const prod = item.product;
@@ -112,7 +111,6 @@
     }
   });
 
-  // Solo si ya tenés socket declarado globalmente
   if (typeof socket !== 'undefined') {
     socket.on('cartUpdated', () => location.reload());
   }

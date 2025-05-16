@@ -16,9 +16,8 @@ const io = new SocketServer(server);
 app.set('socketio', io);
 
 const PORT = process.env.PORT || 8080;
-const PERSISTENCE = process.env.PERSISTENCE || 'file'; // Usar 'mongo' o 'file'
+const PERSISTENCE = process.env.PERSISTENCE || 'file'; 
 
-// Conexión a Mongo solo si es necesaria
 if (PERSISTENCE === 'mongo') {
   mongoose.connect('mongodb://localhost:27017/ecommerce')
     .then(() => {
@@ -36,7 +35,6 @@ if (PERSISTENCE === 'mongo') {
   });
 }
 
-// Helpers Handlebars
 function getPrevPageLink(page) {
   const p = Math.max(Number(page) - 1, 1);
   return `/products?page=${p}`;
@@ -46,7 +44,6 @@ function getNextPageLink(page) {
   return `/products?page=${p}`;
 }
 
-// Configuración Handlebars
 app.engine('handlebars', engine({
   defaultLayout: 'main',
   layoutsDir: path.join(rootDir, 'src', 'views', 'layouts'),
@@ -58,17 +55,14 @@ app.engine('handlebars', engine({
 app.set('view engine', 'handlebars');
 app.set('views', path.join(rootDir, 'src', 'views'));
 
-// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(rootDir, 'public')));
 
-// Rutas
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/', viewsRouter);
 
-// WebSocket
 io.on('connection', socket => {
   console.log('🟢 Cliente conectado');
 
@@ -99,7 +93,6 @@ io.on('connection', socket => {
   });
 });
 
-// Vista productos
 app.get('/products', async (req, res) => {
   const { limit = 10, page = 1, sort = '', category = '' } = req.query;
 
@@ -149,7 +142,6 @@ app.get('/products', async (req, res) => {
   }
 });
 
-// Vista carrito
 app.get('/carts/:cid', async (req, res) => {
   try {
     const cartId = req.params.cid;

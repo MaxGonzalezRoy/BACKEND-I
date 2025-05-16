@@ -1,7 +1,5 @@
-<!-- 🛍️ TÍTULO -->
 <h1 class="text-3xl font-bold text-center my-6">🛍️ Productos Disponibles</h1>
 
-<!-- 🔎 FILTROS Y ORDENAMIENTO -->
 <form id="filterForm" class="flex flex-wrap justify-center gap-4 mb-6 px-4">
     <select name="category" class="border rounded p-2">
         <option value="" {{#unless query.category}}selected{{/unless}}>Todas las categorías</option>
@@ -21,7 +19,6 @@
     </button>
 </form>
 
-<!-- 🧱 GRILLA DE PRODUCTOS -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
     {{#each products.docs}}
         <div class="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between">
@@ -41,7 +38,6 @@
     {{/each}}
 </div>
 
-<!-- 📄 PAGINACIÓN -->
 <div class="flex justify-center gap-2 my-6">
     {{#if products.hasPrevPage}}
         <a href="?page={{products.prevPage}}{{#if queryString}}&{{queryString}}{{/if}}" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded">
@@ -60,9 +56,7 @@
     {{/if}}
 </div>
 
-<!-- 🧠 SCRIPTS -->
 <script>
-    // Filtrado dinámico
     const form = document.getElementById('filterForm');
     form.addEventListener('submit', e => {
         e.preventDefault();
@@ -76,7 +70,6 @@
         window.location.href = `?${params.toString()}`;
     });
 
-    // Manejo de carrito
     async function getOrCreateCartId() {
         let cartId = localStorage.getItem('cartId');
 

@@ -1,4 +1,4 @@
-const persistence = process.env.PERSISTENCE || 'file'; // 'mongo' o 'file'
+const persistence = process.env.PERSISTENCE || 'file';
 
 let productDao;
 let cartDao;

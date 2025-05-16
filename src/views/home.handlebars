@@ -10,7 +10,6 @@
     <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-700">Agregar Producto</button>
 </form>
 
-<!-- Filtro por categoría -->
 <select id="category-filter" class="border p-2 rounded max-w-lg mx-auto block my-6">
     <option value="all">Todas</option>
     {{#each categories}}
@@ -18,7 +17,5 @@
     {{/each}}
 </select>
 
-<!-- Lista de productos -->
 <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 mt-6">
-    {{!-- Productos se re-renderizan desde JS, por eso dejamos el contenedor vacío --}}
 </div>
