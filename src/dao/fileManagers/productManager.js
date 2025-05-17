@@ -3,7 +3,7 @@ import path from 'path';
 
 const filePath = path.resolve('src/data/products.json');
 
-export default class ProductManager {
+class ProductManager {
   constructor() {
     this.path = filePath;
     this.#initFile();
@@ -33,12 +33,7 @@ export default class ProductManager {
     await fs.writeFile(this.path, JSON.stringify(data, null, 2));
   }
 
-  async getProducts() {
-    const products = await this.#readFile();
-    return products.map(p => ({ ...p, _id: p.id }));
-  }
-
-  async getProductsPaginated({ page = 1, limit = 10, category, sort } = {}) {
+  async getPaginatedProducts({ page = 1, limit = 10, category, sort } = {}) {
     const products = await this.#readFile();
 
     let filtered = category
@@ -124,3 +119,5 @@ export default class ProductManager {
     return true;
   }
 }
+
+export const productDao = new ProductManager();

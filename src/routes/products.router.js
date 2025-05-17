@@ -1,32 +1,21 @@
 import { Router } from 'express';
-import { productDao } from '../dao/index.js';
+import { productDao } from '../dao/fileManagers/productManager.js';
 
 const router = Router();
 
 router.get('/', async (req, res) => {
   try {
     console.log("📥 GET /api/products llamado con query:", req.query);
-    
     const { limit = 10, page = 1, category, sort } = req.query;
-    
-    // Armar filtro
-    const filter = {};
-    if (category) filter.category = category;
 
-    // Armar orden
-    const sortOption = {};
-    if (sort === 'asc') sortOption.price = 1;
-    else if (sort === 'desc') sortOption.price = -1;
+    const result = await productDao.getPaginatedProducts({
+      limit: Number(limit),
+      page: Number(page),
+      category,
+      sort,
+    });
 
-    const options = {
-      limit: parseInt(limit),
-      page: parseInt(page),
-      sort: sortOption,
-    };
-
-    const result = await productDao.getPaginatedProducts(filter, options);
-
-    console.log("📤 Productos paginados:", result);
+    console.log("📤 Resultado paginado:", result);
     res.json(result);
   } catch (error) {
     console.error("❌ Error en GET /api/products con paginación:", error.message);
@@ -37,7 +26,7 @@ router.get('/', async (req, res) => {
 router.get('/:pid', async (req, res) => {
   try {
     console.log(`🔍 GET /api/products/${req.params.pid}`);
-    const product = await productDao.getProductById(req.params.pid);
+    const product = await productDao.getProductById(parseInt(req.params.pid));
     if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
     res.json(product);
   } catch (error) {
@@ -60,7 +49,7 @@ router.post('/', async (req, res) => {
 router.put('/:pid', async (req, res) => {
   try {
     console.log(`✏️ PUT /api/products/${req.params.pid} con body:`, req.body);
-    const updated = await productDao.updateProduct(req.params.pid, req.body);
+    const updated = await productDao.updateProduct(parseInt(req.params.pid), req.body);
     if (!updated) return res.status(404).json({ error: 'Producto no encontrado' });
     res.json(updated);
   } catch (error) {
@@ -72,7 +61,7 @@ router.put('/:pid', async (req, res) => {
 router.delete('/:pid', async (req, res) => {
   try {
     console.log(`🗑 DELETE /api/products/${req.params.pid}`);
-    const deleted = await productDao.deleteProduct(req.params.pid);
+    const deleted = await productDao.deleteProduct(parseInt(req.params.pid));
     if (!deleted) return res.status(404).json({ error: 'Producto no encontrado' });
     res.json({ message: 'Producto eliminado correctamente' });
   } catch (error) {
