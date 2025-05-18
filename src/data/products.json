@@ -1,20 +1,167 @@
 [
-{
+    {
     "id": 1,
-    "title": "Teclado Mecánico",
-    "description": "Teclado Mecánico RGB",
-    "price": 5000,
-    "code": "TK-001",
-    "stock": 10,
-    "category": "perifericos"
-},
-{
+    "title": "Laptop Tecnologia",
+    "description": "Laptop de alta calidad para tecnologia",
+    "price": 183.68,
+    "stock": 69,
+    "category": "tecnologia",
+    "code": "TE001",
+    "status": true,
+    "thumbnails": []
+    },
+    {
     "id": 2,
-    "title": "Mouse gamer",
-    "description": "RGB con 7 botones",
-    "price": 3500,
-    "code": "MS-007",
-    "stock": 15,
-    "category": "perifericos"
-}
+    "title": "Tablet Tecnologia",
+    "description": "Tablet de alta calidad para tecnologia",
+    "price": 223.0,
+    "stock": 29,
+    "category": "tecnologia",
+    "code": "TE002",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 3,
+    "title": "Camisa Moda",
+    "description": "Camisa de alta calidad para moda",
+    "price": 165.47,
+    "stock": 29,
+    "category": "moda",
+    "code": "MO003",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 4,
+    "title": "L\u00e1mpara Hogar",
+    "description": "L\u00e1mpara de alta calidad para hogar",
+    "price": 246.82,
+    "stock": 68,
+    "category": "hogar",
+    "code": "HO004",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 5,
+    "title": "Tablet Tecnologia",
+    "description": "Tablet de alta calidad para tecnologia",
+    "price": 227.8,
+    "stock": 58,
+    "category": "tecnologia",
+    "code": "TE005",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 6,
+    "title": "Pantal\u00f3n Moda",
+    "description": "Pantal\u00f3n de alta calidad para moda",
+    "price": 295.53,
+    "stock": 82,
+    "category": "moda",
+    "code": "MO006",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 7,
+    "title": "Almohada Hogar",
+    "description": "Almohada de alta calidad para hogar",
+    "price": 165.93,
+    "stock": 7,
+    "category": "hogar",
+    "code": "HO007",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 8,
+    "title": "L\u00e1mpara Hogar",
+    "description": "L\u00e1mpara de alta calidad para hogar",
+    "price": 70.1,
+    "stock": 93,
+    "category": "hogar",
+    "code": "HO008",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 9,
+    "title": "Zapatillas Moda",
+    "description": "Zapatillas de alta calidad para moda",
+    "price": 158.26,
+    "stock": 87,
+    "category": "moda",
+    "code": "MO009",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 10,
+    "title": "Gorra Moda",
+    "description": "Gorra de alta calidad para moda",
+    "price": 288.29,
+    "stock": 46,
+    "category": "moda",
+    "code": "MO010",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 11,
+    "title": "Zapatillas Moda",
+    "description": "Zapatillas de alta calidad para moda",
+    "price": 236.23,
+    "stock": 55,
+    "category": "moda",
+    "code": "MO011",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 12,
+    "title": "Silla Hogar",
+    "description": "Silla de alta calidad para hogar",
+    "price": 384.75,
+    "stock": 39,
+    "category": "hogar",
+    "code": "HO012",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 13,
+    "title": "Smartphone Tecnologia",
+    "description": "Smartphone de alta calidad para tecnologia",
+    "price": 174.56,
+    "stock": 30,
+    "category": "tecnologia",
+    "code": "TE013",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 14,
+    "title": "Gorra Moda",
+    "description": "Gorra de alta calidad para moda",
+    "price": 113.21,
+    "stock": 36,
+    "category": "moda",
+    "code": "MO014",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "id": 15,
+    "title": "Pantal\u00f3n Moda",
+    "description": "Pantal\u00f3n de alta calidad para moda",
+    "price": 311.55,
+    "stock": 32,
+    "category": "moda",
+    "code": "MO015",
+    "status": true,
+    "thumbnails": []
+    }
 ]

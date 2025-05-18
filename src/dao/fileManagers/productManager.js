@@ -120,4 +120,5 @@ class ProductManager {
   }
 }
 
-export const productDao = new ProductManager();
+const productDao = new ProductManager();
+export { productDao };

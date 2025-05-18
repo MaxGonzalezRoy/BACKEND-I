@@ -49,7 +49,7 @@ Este proyecto es una aplicación backend desarrollada con **Node.js**, **Express
 - **POST /api/carts** – Crea un nuevo carrito.
 - **GET /api/carts/:cid** – Devuelve los productos del carrito (con `populate`).
 - **POST /api/carts/:cid/products/:pid** – Agrega un producto al carrito.
-- **PUT /api/carts/:cid** – Reemplaza los productos del carrito.
+- **PUT //carts/:cid** – Reemplaza los productos del carrito.
 - **PUT /api/carts/:cid/products/:pid** – Actualiza la cantidad de un producto.
 - **DELETE /api/carts/:cid/products/:pid** – Elimina un producto del carrito.
 - **DELETE /api/carts/:cid** – Vacía completamente el carrito.

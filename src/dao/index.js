@@ -11,10 +11,13 @@ if (persistence === 'mongo') {
     cartDao = new CartDaoMongo();
 } else {
     console.log("📁 Usando persistencia con archivos JSON");
-    const ProductManager = (await import('./fileManagers/productManager.js')).default;
-    const CartManager = (await import('./fileManagers/cartManager.js')).default;
-    productDao = new ProductManager();
-    cartDao = new CartManager();
+
+    // Importar las instancias directamente desde los archivos .js
+    const productModule = await import('./fileManagers/productManager.js');
+    const cartModule = await import('./fileManagers/cartManager.js');
+
+    productDao = productModule.productDao;
+    cartDao = cartModule.cartDao;
 }
 
 export { productDao, cartDao };

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const cartsPath = path.resolve('src/data/carts.json');
 
-export default class CartManager {
+class CartManager {
   constructor() {
     this.path = cartsPath;
   }
@@ -101,3 +101,6 @@ export default class CartManager {
     return cart;
   }
 }
+
+const cartDao = new CartManager();
+export { cartDao };

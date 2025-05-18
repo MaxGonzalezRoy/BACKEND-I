@@ -8,28 +8,23 @@ viewsRouter.get('/', (req, res) => {
 });
 
 viewsRouter.get('/home', async (req, res) => {
-    const products = await productDao.getProducts();
+    const result = await productDao.getPaginatedProducts({ page: 1, limit: 100 });
+    const products = result.docs;
     res.render('home', { products });
 });
 
 viewsRouter.get('/products', async (req, res) => {
     try {
-        const query = req.query;
-        const { page = 1, limit = 10, category, sort } = query;
+        const { page = 1, limit = 10, category, sort } = req.query;
 
-        const filters = {};
-        if (category) filters.category = category;
-
-        const sortOptions = (sort === 'asc' || sort === 'desc') ? { price: sort } : {};
-
-        const products = await productDao.getProductsPaginated(filters, {
-            page,
-            limit,
-            sort: sortOptions,
-            lean: true
+        const result = await productDao.getPaginatedProducts({
+            page: parseInt(page),
+            limit: parseInt(limit),
+            category,
+            sort
         });
 
-        products.queryString = new URLSearchParams({
+        result.queryString = new URLSearchParams({
             ...(category && { category }),
             ...(sort && { sort }),
         }).toString();
@@ -37,8 +32,8 @@ viewsRouter.get('/products', async (req, res) => {
         res.render('products', {
             title: 'Productos',
             style: 'products.css',
-            products
-        });
+            products: result
+            });
     } catch (error) {
         console.error('❌ Error al obtener productos paginados:', error);
         res.status(500).send('Error interno del servidor');
@@ -56,7 +51,6 @@ viewsRouter.get('/cart', (req, res) => {
 viewsRouter.get('/carts/:cid', async (req, res) => {
     try {
         const cid = req.params.cid;
-
         const cart = await cartDao.getCartById(cid);
 
         if (!cart) {
@@ -76,20 +70,20 @@ viewsRouter.get('/carts/:cid', async (req, res) => {
         );
 
         const totalPrice = enrichedProducts.reduce(
-            (total, item) => total + (item.price * item.quantity), 0
+        (total, item) => total + (item.price * item.quantity), 0
         );
 
-        res.render('carts', {
-            layout: 'main',
-            cart: {
-                id: cart._id,
-                products: enrichedProducts,
-                totalPrice: totalPrice.toFixed(2)
-            }
-        });
+    res.render('carts', {
+        layout: 'main',
+        cart: {
+            id: cart._id || cart.id,
+            products: enrichedProducts,
+            totalPrice: totalPrice.toFixed(2)
+        }
+    });
     } catch (error) {
-        console.error('❌ Error al obtener carrito:', error);
-        res.status(500).send('Error interno del servidor');
+    console.error('❌ Error al obtener carrito:', error);
+    res.status(500).send('Error interno del servidor');
     }
 });
 
